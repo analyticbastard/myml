@@ -1,8 +1,12 @@
 
+import numpy as np
+
+import scipy as sp
+
+import base
 
 
-
-class NNLS():
+class NNLS(base.AbstractSupervisedMethod):
     
     def __init__(self, max_iter = 500):
         self.max_iter_ = max_iter
@@ -45,6 +49,12 @@ class NNLS():
             self.coef_ = g = z
             
             w = X.T.dot( y - X.dot(g) )
+    
+        
+        
+    def predict(self, X):
+        return X.dot( self.coef_ )
+        
             
         
     def find_t_max(self, X, y, g):
@@ -80,7 +90,3 @@ class NNLS():
         self.S = np.setdiff1d( self.S, idx ).tolist()
         self.E = np.setdiff1d( self.E, idx ).tolist()
         self.E.extend( idx )
-        
-        
-    def predict(X):
-        return X.dot( self.coef_ )
