@@ -1,12 +1,15 @@
 
 import numpy as np
 
-import scipy as sp
+from scipy import linalg
 
 import base
 
 
 class NNLS(base.AbstractSupervisedMethod):
+    """
+    Non-negative least squares
+    """
     
     def __init__(self, max_iter = 500):
         self.max_iter_ = max_iter
@@ -30,7 +33,7 @@ class NNLS(base.AbstractSupervisedMethod):
             Bs = np.zeros( (n, m) )
             Bs[:,self.S] = X[:, self.S ]
             
-            z = sp.linalg.lstsq(Bs, y)
+            z = linalg.lstsq(Bs, y)[0]
             print z
             z[self.E] = 0
             
@@ -43,7 +46,7 @@ class NNLS(base.AbstractSupervisedMethod):
                 Bs = np.zeros( (n, m) )
                 Bs[:,self.S] = X[:, self.S ]
                 
-                z = sp.linalg.lstsq(Bs, y)
+                z = linalg.lstsq(Bs, y)[0]
                 z[self.E] = 0
             
             self.coef_ = g = z
@@ -63,7 +66,7 @@ class NNLS(base.AbstractSupervisedMethod):
         
         for i in range(self.ncol_):
             b = X[:,i:(i+1)]
-            w = b.T.dot ( y - X.dot(g) )
+            w = ( y - X.dot(g) ).dot(b)[0]
             
             if max_val < w:
                 max_val = w
