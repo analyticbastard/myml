@@ -18,16 +18,30 @@ from sklearn import metrics
 
 
     
-def kernelFactory(name, gamma):
+def kernelFactory(name = "RBF", **kwargs):
     """
     Factory method to anstract the kernel creation 
     """
-    if name.lower() == "RBF" or name.lower() == "gaussian":
+    
+    def returnRBF(**kwargs):
+        """
+        Auxiliary function to return a Gaussian kernel, since it is
+        user more than once 
+        """
+        try:
+            gamma = kwargs["gamma"]
+        except:
+            gamma = 0.1
+        
         return RBFKernel(gamma)
+    
+    
+    if name.lower() == "RBF" or name.lower() == "gaussian":
+        return returnRBF(**kwargs)
     elif name.lower() == "linear":
         return LinearKernel()
     else:
-        return RBFKernel(gamma)
+        return returnRBF(**kwargs)
     
     
 
@@ -42,10 +56,10 @@ class Kernel:
     
     Kernel initializations go in their respective constructors.
     """
-    __metaclass__ = ABCMeta
-        
+    __metaclass__ = ABCMeta    
+    
     @abstractmethod
-    def setX(self, X):
+    def setData(self, X):
         """
         Sets the input data to compute the Gram matrix and/or the gradient.
         The gram matrix is computed in this step.
@@ -73,12 +87,19 @@ class Kernel:
 
 
 class RBFKernel(Kernel):
+    """
+    Implements Gaussian kernel computation of the Gram matrix and
+    the gradient.
+    """
     
     def __init__(self, gamma):
+        """
+        :param gamma: Gamma parameter exp(-gamma ||x_i - x_j||^2)
+        """
         self.gamma_ = gamma
        
         
-    def setX(self, X):
+    def setData(self, X):
         self.X_ = X
         self.gram_ = metrics.pairwise_kernels(self.X_, metric = 'rbf',
                                               gamma = self.gamma_)
@@ -87,17 +108,17 @@ class RBFKernel(Kernel):
     def gradient(self, i):
         """
         Computes the gradient of the Gaussian function at the datum i.
+        2*self.gamma_ * (self.X_[i,:] - self.X_[j,:]) * self.gram_[i,j]
         
-        :param K: RBF kernel on the variable :param X:
-        :param X: Data X corresponding to the kernel matrix :param K:
         :param i: Datum for which to compute the current gradient
         """
         
         n, m = self.X_.shape
         
         g = np.zeros((n,m))
+        gamma2 = 2*self.gamma_
         for j in range(n):
-            g[j,:] = 2*self.gamma_ * (self.X_[i,:] - self.X_[j,:]) * self.gram_[i,j]
+            g[j,:] = gamma2 * (self.X_[i,:] - self.X_[j,:]) * self.gram_[i,j]
             
         return g
     
@@ -106,7 +127,7 @@ class LinearKernel(Kernel):
     def __init__(self):
         pass
     
-    def setX(self, X):
+    def setData(self, X):
         self.X_ = X
         self.gram_ = X.dot(X.T)
         
