@@ -81,7 +81,7 @@ class GKDR(AbstractSupervisedMethod):
         Computers the reduced dimension from X and (possibly) y.
         
         :param X: Data covariates variable X to reduce the dimensionality
-        :param y: Guiding variable. Optional (using X as autoregressor).
+        :param y: Dependent variable. Optional (using X as autoregressor).
         """
         if self.scale_:
             X = preprocessing.scale(X)
