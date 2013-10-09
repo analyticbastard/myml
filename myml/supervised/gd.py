@@ -15,15 +15,24 @@ import base
 class AbstractGradientDescent(base.AbstractSupervisedMethod):
     __metaclass__ = ABCMeta
     
-    @absractmethod
+    @abstractmethod
     def update_w(self, w, y, ite):
         pass
 
 
 
 class GradientDescent(AbstractGradientDescent):
+    """
+    Implements the gradient descent approximation algorithm with
+    adaptive learning rate.
+    
+    The objective function and the gradient must be passed to the
+    constructor, and must be functions that accept two parameters
+    (the current coefficients and the objective vector).
+    """
     
     def __init__(self, fn_obj, fn_grad, max_iter = 500,
+                 init_lr = 0.1, adaptive_lr = True,
                  tol = 10**(-6), scale = True):
         self.fn_obj_ = fn_obj
         self.fn_grad_ = fn_grad
