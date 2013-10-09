@@ -17,51 +17,78 @@ from ..math import kernel
 from .base import AbstractSupervisedMethod
 
 class GKDR(AbstractSupervisedMethod):
-    """ Gradient-based Kernel Dimension Reduction
+    """
+    Gradient-based Kernel Dimension Reduction
         
-        The method can be used as supervised learning by using a guiding
-        variable y, or as unsupervised learning by using the same variable
-        X as an autoregressor.
+    The method can be used as supervised learning by using a guiding
+    variable y, or as unsupervised learning by using the same variable
+    X as an autoregressor.
+
+    The only supported kernel is the Gaussian (RBF) kernel for its
+    characteristic property and its differentiability at all points.
+    This is done with the help of the abstracted kernel abstractions
+    under the math package, which return the gradients.
     
-        The only supported kernel is the Gaussian (RBF) kernel for its
-        characteristic property and its differentiability at all points.
-        
-        References:
-        [1] K. Fukumizu, C. Leng - Gradient-based kernel method for feature 
-            extraction and variable selection. NIPS 2012.
+    References:
+    [1] K. Fukumizu, C. Leng - Gradient-based kernel method for feature 
+        extraction and variable selection. NIPS 2012.
     """
 
     def __init__(self, n_components = 2, scale = True, 
-                 gamma_x = 1, gamma_y = 1, lamb = 0.01):
+                 lamb = 0.001, **kwargs):
         """
-            :param n_components: The number of dimensions in the reduced 
-            representation. Detault 2.
-            :param scale: Whether to scale data. Default True.
-            :param gamma_x: Gamma parameter for the kernel on X
-            :param gamma_y: Gamma parameter for the kernel on y
-            :param lamb: Regularization constant for the kernel on X inversion
+        :param n_components: The number of dimensions in the reduced 
+        representation. Detault 2.
+        :param scale: Whether to scale data. Default True.
+        :param gamma_x: Gamma parameter for the kernel on X
+        :param gamma_y: Gamma parameter for the kernel on y
+        :param lamb: Regularization constant for the kernel on X inversion
         """
         self.n_components_ = n_components
         
         self.scale_   = scale
-        self.ky_      = kernel.kernelFactory("RBF", gamma_x)
-        self.kx_      = kernel.kernelFactory("RBF", gamma_y)
         self.lamb_    = lamb
+        
+        # The following dicts are the parameters for kx and ky kernels
+        yargs = dict()
+        xargs = dict()
+        
+        # Gaussian by default
+        yname = "RBF"
+        xname = "RBF"
+        
+        # We extract the possible names for both kernels, and its parameters
+        for a in kwargs:
+            if a == "kernel_y":
+                yname = kwargs[a]
+            elif a == "kernel_x":
+                xname = kwargs[a]    
+            elif a.endswith("_y"):
+                # We remove the trailing _y for it to be subsequently valid
+                yargs[a[:-2]] = kwargs[a]
+            elif a.endswith("_x"):
+                # We remove the trailing _x for it to be subsequently valid
+                xargs[a[:-2]] = kwargs[a]
+        
+        self.ky_ = kernel.kernelFactory(yname, **yargs)
+        self.kx_ = kernel.kernelFactory(xname, **xargs)
         
     
         
         
     def fit(self, X, y = None):
-        """ Computers the reduced dimension from X and (possibly) y.
+        """
+        Computers the reduced dimension from X and (possibly) y.
         
-            :param X: Data covariates variable X to reduce the dimensionality
-            :param y: Guiding variable. Optional (using X as autoregressor).
+        :param X: Data covariates variable X to reduce the dimensionality
+        :param y: Guiding variable. Optional (using X as autoregressor).
         """
         if self.scale_:
             X = preprocessing.scale(X)
             
-            if y:
-                if y.shape != X.shape:
+            if y != None:
+                if y.shape[0] != X.shape[0]:
+                    # Throw exception
                     return
                     
                 y = preprocessing.scale(y)
@@ -70,10 +97,10 @@ class GKDR(AbstractSupervisedMethod):
                 y = X
         
         n, m = X.shape
-        lam     = self.lamb_
+        lam  = self.lamb_
         
-        self.ky_.setX(y)
-        self.kx_.setX(X)
+        self.ky_.setData(y)
+        self.kx_.setData(X)
         
         Ky = self.ky_.gram()
         Kx = self.kx_.gram()
@@ -85,18 +112,23 @@ class GKDR(AbstractSupervisedMethod):
         G   = np.dot(IGx, Gy)
         G   = np.dot(G, IGx)
         
-        M = np.zeros((m,m))
+        M = None
         for i in range(n):
             gx = self.kx_.gradient(i)
-            M = M + np.dot(gx.T, np.dot(G, gx) )
             
+            Mi = np.dot(gx.T, np.dot(G, gx) )
+            if M == None: M = Mi
+            else: M = M + Mi
+        
+        M = M/n
         eb, U = np.linalg.eigh(M)
         
+        self.M_       = M
         self.weights_ = eb
         self.coef_    = U[:,-self.n_components_: ]
         
     
     
     def predict(self, X):
-        return X.dot( self._coef_ )
+        return X.dot( self.coef_ )
         
