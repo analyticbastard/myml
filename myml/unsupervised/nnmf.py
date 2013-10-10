@@ -7,9 +7,20 @@ Created on Wed Aug 14 15:26:50 2013
 
 import numpy as np
 import scipy as sp
+from scipy import optimize
 
 
 class SNNMF():
+    """
+    Implements a sparse non-negative matrix factorization described in [1].
+    An imput matrix A is factorized in two factors W and H such that
+    ||A-WH||_F^2 + beta*||H||_1 (the sparsity of H) is minimum. The method
+    uses the non-negative least squares implemented in Scipy.
+    
+    [1] Nonnegative Matrix Factorization Based on Alternating Nonnegativity
+        Constrained Least Squares and Active Set Method. Hyunsoo Kim and
+        Haesun Park. SIAM Journal on Matrix Analysis and Applications, 30-2
+    """
     
     def __init__(self, n_components = 2, max_iter = 500,
                  beta = 0.1, eta = 0.1):
@@ -48,7 +59,7 @@ class SNNMF():
         AA = np.vstack( (A, o) )
         
         for i in range( self.ncol_ ):
-            H[:,i], residual = sp.optimize.nnls( WW, AA[:,i] )
+            H[:,i], residual = optimize.nnls( WW, AA[:,i] )
     
         return H
         
@@ -63,7 +74,7 @@ class SNNMF():
         AA = np.vstack( (A.T, o.T) )
         
         for i in range( self.nrow_ ):
-            W[i,:], residual = sp.optimize.nnls( HH, AA[:,i] )
+            W[i,:], residual = optimize.nnls( HH, AA[:,i] )
     
         return W
         
