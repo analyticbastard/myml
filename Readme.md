@@ -29,4 +29,5 @@ Currently implemented features:
 
   [1] Nonnegative Matrix Factorization Based on Alternating Nonnegativity
       Constrained Least Squares and Active Set Method. Hyunsoo Kim and
-      Haesun Park. SIAM Journal on Matrix Analysis and Applications, 30-2
+      Haesun Park. SIAM Journal on Matrix Analysis and Applications, 30-2,
+      2008

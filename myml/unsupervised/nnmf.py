@@ -19,7 +19,8 @@ class SNNMF():
     
     [1] Nonnegative Matrix Factorization Based on Alternating Nonnegativity
         Constrained Least Squares and Active Set Method. Hyunsoo Kim and
-        Haesun Park. SIAM Journal on Matrix Analysis and Applications, 30-2
+        Haesun Park. SIAM Journal on Matrix Analysis and Applications, 30-2.
+        2008.
     """
     
     def __init__(self, n_components = 2, max_iter = 500,
