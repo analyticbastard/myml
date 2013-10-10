@@ -17,12 +17,16 @@ Currently implemented features:
 --------------
 
 - Gradient Kernel-based Dimension Reduction
+
   [1] K. Fukumizu, C. Leng - Gradient-based kernel method for feature 
-        extraction and variable selection. NIPS 2012.
-        
+      extraction and variable selection. NIPS 2012.
+       
+  
 - Gradient descent with fixed learning rate
 
+
 - Sparse Non-negative matrix factorization
+
   [1] Nonnegative Matrix Factorization Based on Alternating Nonnegativity
       Constrained Least Squares and Active Set Method. Hyunsoo Kim and
       Haesun Park. SIAM Journal on Matrix Analysis and Applications, 30-2
