@@ -43,3 +43,9 @@ Currently implemented features:
       Constrained Least Squares and Active Set Method. Hyunsoo Kim and
       Haesun Park. SIAM Journal on Matrix Analysis and Applications, 30-2,
       2008
+      
+
+Watch comments on
+--------------
+
+[a link](http://machinomics.blogspot.com)
