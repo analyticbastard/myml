@@ -20,7 +20,7 @@ from sklearn import metrics
     
 def kernelFactory(name = "RBF", **kwargs):
     """
-    Factory method to anstract the kernel creation 
+    Factory method to abstract the kernel creation 
     """
     
     def returnRBF(**kwargs):

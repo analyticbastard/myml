@@ -24,6 +24,7 @@ class AbstractGradientDescent():
         pass
 
 
+
 class Objective():
     __metaclass__ = ABCMeta
     
@@ -33,6 +34,7 @@ class Objective():
         pass
     
 
+
 class DifferentiableObjective():
     __metaclass__ = ABCMeta
     
@@ -40,6 +42,15 @@ class DifferentiableObjective():
     @abstractmethod
     def df(X, w, y):
         pass
+
+
+def gradientDescentFactory(name, fn, **kwargs):
+    
+    if name == "classical":
+        return GradientDescent(fn, **kwargs)
+    else: return GradientDescent(fn, **kwargs)
+    
+
 
 
 class GradientDescent(AbstractGradientDescent):

@@ -89,10 +89,8 @@ class LogisticRegression(base.AbstractSupervisedMethod):
     
     [1] Stanford CS 229 Lecture Notes (Logistic Regression), Andrew Ng
     """
-    def __init__(self, max_iter = 100, scale=False, init_eta = 1,
-                 intercept = True):
-        self.gd_ = gd.GradientDescent(Logistic, max_iter = max_iter,
-                                      scale = scale, init_eta = init_eta)
+    def __init__(self, gd_name = "classical", intercept = True, **kwargs):
+        self.gd_ = gd.gradientDescentFactory(gd_name, Logistic, **kwargs)
         self.intercept_  = True
     
     

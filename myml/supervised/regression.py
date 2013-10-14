@@ -61,10 +61,8 @@ class OLS(AbstractSupervisedMethod):
     Least squares or multiple linear regression with a gradient
     descent estimation of the parameters.
     """
-    def __init__(self, max_iter = 100, scale=False, init_eta = 1,
-                 intercept = True):
-        self.gd_ = gd.GradientDescent(Square, max_iter = max_iter,
-                                      scale = scale, init_eta = init_eta)
+    def __init__(self, gd_name = "classical", intercept = True, **kwargs):
+        self.gd_ = gd.gradientDescentFactory(gd_name, Square, **kwargs)
         self.intercept_  = True
     
     
