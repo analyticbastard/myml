@@ -24,6 +24,18 @@ Currently implemented features:
   
 - Gradient descent with fixed learning rate
 
+  [1] Stanford CS 229 Lecture Notes (Logistic Regression), Andrew Ng
+
+
+- Logistic Regression
+
+  [1] Stanford CS 229 Lecture Notes (Logistic Regression), Andrew Ng
+  
+
+- Non-negative least squares
+
+  [1] Lawson C., Hanson R.J., Solving Least Squares Problems, SIAM. 1987
+
 
 - Sparse Non-negative matrix factorization
 
