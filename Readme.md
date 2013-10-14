@@ -25,6 +25,11 @@ Currently implemented features:
 - Gradient descent with fixed learning rate
 
   [1] Stanford CS 229 Lecture Notes (Logistic Regression), Andrew Ng
+  
+
+- Ordinary Least squares
+
+  [1] Stanford CS 229 Lecture Notes (Logistic Regression), Andrew Ng
 
 
 - Logistic Regression
