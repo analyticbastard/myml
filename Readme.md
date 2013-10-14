@@ -56,15 +56,15 @@ Usage
 Currently no installer is included. This means that you will have to put it
 under your current working directory or under the Python path yourself.
 
-from myml.supervised import regression
+	from myml.supervised import regression
 
-ols  = regression.OLS()
-gkdr = gkdr.GKDR()
+	ols  = regression.OLS()
+	gkdr = gkdr.GKDR()
 
 
-from myml.supervised import classification
+	from myml.supervised import classification
 
-lr   = classification.LogisticRegression()
+	lr   = classification.LogisticRegression()
 
 
 
