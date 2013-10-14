@@ -12,13 +12,34 @@ from sklearn import preprocessing
 import base
 
 
-class AbstractGradientDescent(base.AbstractSupervisedMethod):
+class AbstractGradientDescent():
     __metaclass__ = ABCMeta
     
     @abstractmethod
     def update_w(self, w, y, ite):
         pass
+    
+    @abstractmethod
+    def get_w(self):
+        pass
 
+
+class Objective():
+    __metaclass__ = ABCMeta
+    
+    @staticmethod
+    @abstractmethod
+    def f(X, w, y):
+        pass
+    
+
+class DifferentiableObjective():
+    __metaclass__ = ABCMeta
+    
+    @staticmethod
+    @abstractmethod
+    def df(X, w, y):
+        pass
 
 
 class GradientDescent(AbstractGradientDescent):
@@ -31,43 +52,55 @@ class GradientDescent(AbstractGradientDescent):
     (the current coefficients and the objective vector).
     """
     
-    def __init__(self, fn_obj, fn_grad, max_iter = 500,
+    def __init__(self, fn, max_iter = 50, init_eta = 1,
                  init_lr = 0.1, adaptive_lr = True,
-                 tol = 10**(-6), scale = True):
-        self.fn_obj_ = fn_obj
-        self.fn_grad_ = fn_grad
+                 tol = 10**(-6), scale = True, verbose = True):
+        self.fn_obj_   = fn.f
+        self.fn_grad_  = fn.df
         self.max_iter_ = max_iter
-        self.tol_ = tol
-        self.scale_ = scale
+        self.tol_      = tol
+        self.scale_    = scale
+        self.verbose_  = verbose
+        self.init_eta_ = init_eta
        
        
     def fit(self, X, y):
         n, m = X.shape
         
         if self.scale_:
-            X = preprocessing.scale(X)
+            self.X_ = preprocessing.scale(X)
             y = preprocessing.scale(y)
+        else:
+            self.X_ = X
             
         w = np.zeros( (m,1) )
         
-        J = self.fn_obj_(w, y)
+        J = self.fn_obj_(X, w, y)
         
         ite = 1
-        while ite < self.max_iter_ and J > self.tol_:
+        while ite < self.max_iter_ and np.abs(J) > self.tol_:
             w = self.update_w(w, y, ite)
-            J = self.fn_obj_(w, y)
+            J = self.fn_obj_(X, w, y)
+            
+            if self.verbose_ and ite % 10 == 0:
+                print ite, w.T
+            
+            ite = ite + 1
             
         self.coef_ = w
+        self.iter_ = ite
+        self.fval_ = J
         
-    
-    def predict(self, X):
-        pass
-            
             
     def update_w(self, w, y, ite):
-        eta = 1/ite
+        eta = self.init_eta_/ite
+        grad = self.fn_grad_(self.X_, w, y)
+        w = w - eta * grad
+        return w
         
-        w = w - eta * self.fn_grad_(w, y)
+    
+    def get_w(self):
+        return self.coef_
         
         
 
