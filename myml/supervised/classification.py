@@ -31,66 +31,6 @@ def logistic(x):
 
 
 
-class Square(gd.DifferentiableObjective):
-    """
-    Square loss objective function and gradient
-    
-    Provides the function and gradient for an
-    AbstractGradientDescent method to work
-    """
-    @staticmethod
-    def f(X, w, y):
-        """
-        Objective function for Squared loss (Linear Regression)
-        """
-        return np.sum( (y - X.dot(w) )**2 )
-    
-    
-    @staticmethod
-    def df(X, w, y):
-        """
-        Gradient for Squared Loss function
-        """
-        N, M = X.shape
-        vec = np.zeros((N,M))
-        for i in range(N):
-            vec[i,:] = - (y[i] - logistic(X[i,:].dot(w)) )*X[i,:]
-        
-        vec = vec.sum(axis=0)
-        return vec.reshape((M,1))
-    
-
-
-
-class OLS(base.AbstractSupervisedMethod):
-    """
-    Least squares or multiple linear regression with a gradient
-    descent estimation of the parameters.
-    """
-    def __init__(self, max_iter = 100, scale=False, init_eta = 1,
-                 intercept = True):
-        self.gd_ = gd.GradientDescent(Square, max_iter = max_iter,
-                                      scale = scale, init_eta = init_eta)
-        self.intercept_  = True
-    
-    
-    
-    def fit(self, X, y):
-        X_ = getData(self.intercept_, X)
-            
-        self.gd_.fit(X_, y)
-        pass
-    
-    
-    def predict(self, X):
-        X_ = getData(self.intercept_, X)
-        w = self.gd_.get_w()
-        
-        return X_.dot(w)
-
-
-
-
 class Logistic(gd.DifferentiableObjective):
     """
     Logistic objective function and gradient

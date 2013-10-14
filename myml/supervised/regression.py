@@ -11,10 +11,173 @@ if __name__ == "__main__" and __package__ is None:
 
 import numpy as np
 
+from scipy   import linalg
+
 from sklearn import preprocessing
 
-from ..math import kernel
-from .base import AbstractSupervisedMethod
+from ..math  import kernel
+from .base   import AbstractSupervisedMethod
+import classification
+import gd
+
+
+
+
+
+
+class Square(gd.DifferentiableObjective):
+    """
+    Square loss objective function and gradient
+    
+    Provides the function and gradient for an
+    AbstractGradientDescent method to work
+    """
+    @staticmethod
+    def f(X, w, y):
+        """
+        Objective function for Squared loss (Linear Regression)
+        """
+        return np.sum( (y - X.dot(w) )**2 )
+    
+    
+    @staticmethod
+    def df(X, w, y):
+        """
+        Gradient for Squared Loss function
+        """
+        N, M = X.shape
+        vec = np.zeros((N,M))
+        for i in range(N):
+            vec[i,:] = - (y[i] - X[i,:].dot(w) )*X[i,:]
+        
+        vec = vec.sum(axis=0)
+        return vec.reshape((M,1))
+    
+
+
+
+class OLS(AbstractSupervisedMethod):
+    """
+    Least squares or multiple linear regression with a gradient
+    descent estimation of the parameters.
+    """
+    def __init__(self, max_iter = 100, scale=False, init_eta = 1,
+                 intercept = True):
+        self.gd_ = gd.GradientDescent(Square, max_iter = max_iter,
+                                      scale = scale, init_eta = init_eta)
+        self.intercept_  = True
+    
+    
+    
+    def fit(self, X, y):
+        X_ = classification.getData(self.intercept_, X)
+            
+        self.gd_.fit(X_, y)
+        pass
+    
+    
+    def predict(self, X):
+        X_ = classification.getData(self.intercept_, X)
+        w = self.gd_.get_w()
+        
+        return X_.dot(w)
+
+
+
+
+
+class NNLS(AbstractSupervisedMethod):
+    """
+    Non-negative least squares
+    
+    [1] Lawson C., Hanson R.J., Solving Least Squares Problems, SIAM. 1987
+    """
+    
+    def __init__(self, max_iter = 500):
+        self.max_iter_ = max_iter
+        
+    
+    def fit(self, X, y):
+        n, m = X.shape
+        self.nrow_ = n
+        self.ncol_ = m
+        
+        g = np.zeros( (m, 1) )
+        
+        self.E = range( n )
+        self.S = []
+        
+        w = X.T.dot ( y - X.dot(g) )
+        
+        while len(self.E)>0 and np.any(w>0):
+            self.move_E_S(X, y, g)
+            
+            Bs = np.zeros( (n, m) )
+            Bs[:,self.S] = X[:, self.S ]
+            
+            z = linalg.lstsq(Bs, y)[0]
+            print z
+            z[self.E] = 0
+            
+            while np.any( z[self.S] <= 0 ):
+                alpha = np.min( g/(g-z) )
+                g = g + alpha * ( z - g )
+                
+                self.move_S_E( g )
+                
+                Bs = np.zeros( (n, m) )
+                Bs[:,self.S] = X[:, self.S ]
+                
+                z = linalg.lstsq(Bs, y)[0]
+                z[self.E] = 0
+            
+            self.coef_ = g = z
+            
+            w = X.T.dot( y - X.dot(g) )
+    
+        
+        
+    def predict(self, X):
+        return X.dot( self.coef_ )
+        
+            
+        
+    def find_t_max(self, X, y, g):
+        max_val = 0
+        ind = -1
+        
+        for i in range(self.ncol_):
+            b = X[:,i:(i+1)]
+            w = ( y - X.dot(g) ).dot(b)[0]
+            
+            if max_val < w:
+                max_val = w
+                ind = i
+                
+        return [ind]
+        
+    
+    def move_E_S(self, X, y, g):
+        ind = self.find_t_max(X, y, g)
+        if ind == -1:
+            return
+            
+        print ind, self.E
+        self.E = np.setdiff1d(self.E, ind).tolist()
+        self.S = np.setdiff1d(self.S, ind).tolist()
+        self.S.extend(ind)
+        
+        
+    def move_S_E(self, g):
+        ind = np.where( g < 10**(-6) )[0]
+        
+        idx = np.intersect1d( self.S, ind ).tolist()
+        self.S = np.setdiff1d( self.S, idx ).tolist()
+        self.E = np.setdiff1d( self.E, idx ).tolist()
+        self.E.extend( idx )
+        
+        
+
 
 class GKDR(AbstractSupervisedMethod):
     """
@@ -131,4 +294,5 @@ class GKDR(AbstractSupervisedMethod):
     
     def predict(self, X):
         return X.dot( self.coef_ )
+        
         
