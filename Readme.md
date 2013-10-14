@@ -48,4 +48,4 @@ Currently implemented features:
 Watch comments on
 --------------
 
-[a link](http://machinomics.blogspot.com)
+[http://machinomics.blogspot.com](http://machinomics.blogspot.com)
