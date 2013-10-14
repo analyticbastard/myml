@@ -9,6 +9,8 @@ import base
 class NNLS(base.AbstractSupervisedMethod):
     """
     Non-negative least squares
+    
+    [1] Lawson C., Hanson R.J., Solving Least Squares Problems, SIAM. 1987
     """
     
     def __init__(self, max_iter = 500):
