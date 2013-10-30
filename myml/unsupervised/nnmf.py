@@ -2,15 +2,17 @@
 """
 Created on Wed Aug 14 15:26:50 2013
 
-@author: buhos_000
+@author: Javier "Analytic Bastard" Arriero-Pais
 """
 
 import numpy as np
 import scipy as sp
 from scipy import optimize
 
+import base
 
-class SNNMF():
+
+class SNNMF(base.AbstractUnsupervisedMethod):
     """
     Implements a sparse non-negative matrix factorization described in [1].
     An imput matrix A is factorized in two factors W and H such that

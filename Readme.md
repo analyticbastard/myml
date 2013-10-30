@@ -22,7 +22,7 @@ Currently implemented features:
       extraction and variable selection. NIPS 2012.
        
   
-- Gradient descent with fixed learning rate
+- Gradient descent with adaptive learning rate
 
   [1] Stanford CS 229 Lecture Notes (Logistic Regression), Andrew Ng
   
@@ -41,6 +41,12 @@ Currently implemented features:
 
   [1] Lawson C., Hanson R.J., Solving Least Squares Problems, SIAM. 1987
 
+
+
+- KMeans
+
+  [1] Wikipedia: [http://en.wikipedia.org/wiki/K-means_clustering](http://en.wikipedia.org/wiki/K-means_clustering)
+  
 
 - Sparse Non-negative matrix factorization
 
