@@ -106,8 +106,8 @@ Planned features
 
   [1] Amari, Shun-ichi, Andrzej Cichocki, and Howard Hua Yang.
       "A new learning algorithm for blind signal separation."
-      
       Advances in neural information processing systems (1996): 757-763.
+      
   [2] Amari, Shun-Ichi. "Natural gradient works efficiently in learning."
       Neural computation 10.2 (1998): 251-276.
 
