@@ -16,13 +16,10 @@ emphasis on Kernel methods.
 Currently implemented features:
 --------------
 
-- Gradient Kernel-based Dimension Reduction
+*Supervised methods*
 
-  [1] K. Fukumizu, C. Leng - Gradient-based kernel method for feature 
-      extraction and variable selection. NIPS 2012.
-       
   
-- Gradient descent with adaptive learning rate
+- Gradient descent and stochastic gradient descent
 
   [1] Stanford CS 229 Lecture Notes (Logistic Regression), Andrew Ng
   
@@ -42,6 +39,13 @@ Currently implemented features:
   [1] Lawson C., Hanson R.J., Solving Least Squares Problems, SIAM. 1987
 
 
+- Gradient Kernel-based Dimension Reduction
+
+  [1] K. Fukumizu, C. Leng - Gradient-based kernel method for feature 
+      extraction and variable selection. NIPS 2012.
+       
+
+*Unsupervised methods*
 
 - KMeans
 
@@ -72,6 +76,40 @@ under your current working directory or under the Python path yourself.
 
 	lr   = classification.LogisticRegression()
 
+
+
+
+Planned features
+--------------
+
+- Gaussianization
+
+  [1] Chen, Scott Shaobing, and Ramesh A. Gopinath. "Gaussianization." (2000).
+
+- Sparse CCA
+
+  [1] Sparse Canonical Correlation Analysis
+	  David R. Hardoon and John Shawe-Taylor, Machine Learning Journal,
+	  Volume 83 (3), Pages 331-353, 2011
+
+- Probabilistic PCA
+
+  [1] Probabilistic principal component analysis
+      ME Tipping, CM Bishop. Journal of the Royal Statistical Society, 1999
+
+- Sparse Filtering
+
+  [1] Ngiam, Jiquan, et al. "Sparse filtering."
+      Advances in Neural Information Processing Systems. 2011.
+
+- Natural Gradient Descent
+
+  [1] Amari, Shun-ichi, Andrzej Cichocki, and Howard Hua Yang.
+      "A new learning algorithm for blind signal separation."
+      
+      Advances in neural information processing systems (1996): 757-763.
+  [2] Amari, Shun-Ichi. "Natural gradient works efficiently in learning."
+      Neural computation 10.2 (1998): 251-276.
 
 
 
