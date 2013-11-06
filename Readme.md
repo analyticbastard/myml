@@ -18,6 +18,10 @@ Currently implemented features:
 
 *Supervised methods*
 
+
+- Naive Bayes binary classifier for *discrete* input data implemented with MapReduce
+
+  [1] Author notes
   
 - Gradient descent and stochastic gradient descent
 
