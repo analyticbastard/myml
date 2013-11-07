@@ -100,15 +100,15 @@ class NaiveBayes(base.AbstractSupervisedMethod):
             for k0, k1 in keys:
                 try:
                     ptemp0 = self.CP_[k0]
-                    
-                    try:
-                        ptemp1 = self.CP_[k1]
-                    except:
-                        ptemp1 = .001
-                        ptemp0 = 1
                 except:
-                    ptemp0 = .0001
+                    ptemp0 = .000001
                     ptemp1 = 1
+                    
+                try:
+                    ptemp1 = self.CP_[k1]
+                except:
+                    ptemp1 = .000001
+                    ptemp0 = 1
                     
                 p *= ptemp0/ptemp1
                 p = 1 if p>1 else p
