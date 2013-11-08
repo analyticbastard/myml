@@ -115,7 +115,9 @@ Planned features
   [2] Amari, Shun-Ichi. "Natural gradient works efficiently in learning."
       Neural computation 10.2 (1998): 251-276.
 
+- kNN classifier
 
+  [1] Author notes
 
 Watch comments on
 --------------
