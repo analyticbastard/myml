@@ -27,7 +27,7 @@ class MapReducer():
         pass
 
 
-class MapReduceServer():
+class MapReduceEngine():
     
     def __init__(self):
         pass
@@ -80,7 +80,7 @@ class NaiveBayes(base.AbstractSupervisedMethod):
     
     def __init__(self):
         nbmr = NaiveBayes.NBMapReduce()
-        self.server_ = MapReduceServer()
+        self.server_ = MapReduceEngine()
         self.server_.set_mr_class(nbmr)
     
     
