@@ -13,13 +13,12 @@ import numpy as np
 
 from scipy   import linalg
 
-from sklearn import preprocessing
-
 from ..math  import kernel
 from .base   import AbstractSupervisedMethod
 import classification
 import gd
 
+from ..unsupervised import utils
 
 
 
@@ -245,15 +244,19 @@ class GKDR(AbstractSupervisedMethod):
         :param y: Dependent variable. Optional (using X as autoregressor).
         """
         if self.scale_:
-            X = preprocessing.scale(X)
+            self.scalerx_ = utils.Scale()
+            self.scalerx_.fit(X)
+            X = self.scalerx_.transform(X)
             
             if y != None:
                 if y.shape[0] != X.shape[0]:
                     # Throw exception
                     return
                     
-                y = preprocessing.scale(y)
-                
+                self.scalery_ = utils.Scale()
+                self.scalery_.fit(y)
+                y = self.scalery_.transform(y)
+            
             else:
                 y = X
         
@@ -291,6 +294,9 @@ class GKDR(AbstractSupervisedMethod):
     
     
     def predict(self, X):
+        if self.scale_:
+            X = self.scalerx_.transform(X)
+                
         return X.dot( self.coef_ )
         
         
