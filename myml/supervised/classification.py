@@ -9,7 +9,7 @@ import numpy as np
 
 import base
 import gd
-
+from ..math import distance
 
 
 
@@ -114,3 +114,37 @@ class LogisticRegression(base.AbstractSupervisedMethod):
         
         return Logistic.logistic(X_, w)
     
+    
+    
+class KNN(base.AbstractSupervisedMethod):
+    
+    def __init__(self, dist = "euclidean", copy = False):
+        self.dist_ = distance.distanceFactory(dist)
+        self.copy_ = copy
+    
+    def fit(self, X, y):
+        if self.copy_:
+            self.X_ = X.copy()
+            self.y_ = y.copy()
+        else:
+            self.X_ = X
+            self.y_ = y
+    
+    def predict(self, X):
+        N, _ = np.shape(self.X_)
+        M, _ = np.shape(X)
+        
+        argd = np.ones((M))*np.Inf
+        dstd = np.ones((M))*np.Inf
+        
+        for i in range(M):
+            for j in range(N):
+                dist = self.dist_.dist(self.X_[j,:], X[i,:])
+                if dist < dstd[i]:
+                    dstd[i] = dist
+                    argd[i] = j
+                    
+        argd = argd.astype('int')
+        lbls = self.y_[argd]
+        
+        return lbls
