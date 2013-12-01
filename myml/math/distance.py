@@ -10,6 +10,9 @@ import numpy as np
 
     
 def distanceFactory(name, **kwargs):
+    """
+    Factory to create distances based on the name
+    """
     if name == "euclidean":
         return DistanceEuclidean()
     else: return DistanceEuclidean()
@@ -17,6 +20,9 @@ def distanceFactory(name, **kwargs):
     
 
 class Distance(object):
+    """
+    Abstract class for a distance
+    """
     __metaclass__ = ABCMeta
     
     @abstractmethod
@@ -25,7 +31,9 @@ class Distance(object):
 
 
 class DistanceEuclidean(Distance):
-    
+    """
+    Class that implements the euclidean distance
+    """
     def __init__(self):
         pass
     
